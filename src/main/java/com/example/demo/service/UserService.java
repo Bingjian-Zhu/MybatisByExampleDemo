@@ -20,8 +20,8 @@ public class UserService{
         PageHelper.startPage(pageNum, pageSize);
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
-        if(!StringUtils.isEmpty(userName))
-        criteria.andUserNameLike("%" + userName + "%");
+        if(userName != null && !StringUtils.isEmpty(userName.trim()))
+        criteria.andUserNameLike("%" + userName.trim() + "%");
         if(deleted != null)
         criteria.andDeletedEqualTo(deleted);
         example.setOrderByClause("id asc");
@@ -37,10 +37,8 @@ public class UserService{
     }
 
     public int addUser(User user){
-        if(!StringUtils.isEmpty(user.getCreateTime()))
-        user.setCreateTime(LocalDateTime.now(Clock.system(ZoneId.of("Asia/Shanghai"))));
-        if(!StringUtils.isEmpty(user.getUpdateTime()))
-        user.setUpdateTime(LocalDateTime.now(Clock.system(ZoneId.of("Asia/Shanghai"))));
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
         return userMapper.insert(user);
     }
 

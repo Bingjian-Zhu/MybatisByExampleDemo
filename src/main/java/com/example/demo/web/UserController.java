@@ -3,11 +3,7 @@ package com.example.demo.web;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,26 +24,26 @@ public class UserController {
 	@RequestMapping(value = "/getUsers", method=RequestMethod.GET)
     public List<User> getUsers(String userName,Boolean deleted,@RequestParam(defaultValue="1") Integer pageNum, 
     @RequestParam(defaultValue = "10") Integer pageSize) {
-		List<User> users=userService.getAllUsers(userName.trim(),deleted,pageNum,pageSize);
+		List<User> users=userService.getAllUsers(userName,deleted,pageNum,pageSize);
 		return users;
 	}
     
     @ApiOperation(value = "根据ID获取用户信息" ,  notes = "返回单个用户信息")
-    @RequestMapping(value = "/getUser", method=RequestMethod.GET)
-    public User getUser(Integer id) {
+    @RequestMapping(value = "/getUser/{id}", method=RequestMethod.GET)
+    public User getUser(@PathVariable("id") Integer id) {
     	User user=userService.getUserById(id);
         return user;
     }
     
     @ApiOperation(value = "新增用户" ,  notes = "注册")
     @RequestMapping(value = "/add", method=RequestMethod.POST)
-    public void save(User user) {
+    public void save(@RequestBody User user) {
     	userService.addUser(user);
     }
     
     @ApiOperation(value = "更新用户信息" ,  notes = "更改用户信息")
-    @RequestMapping(value = "update", method=RequestMethod.PUT)
-    public void update(User user) {
+    @RequestMapping(value = "/update", method=RequestMethod.PUT)
+    public void update(@RequestBody User user) {
     	userService.updateUser(user);
     }
     
