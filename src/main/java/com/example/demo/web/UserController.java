@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,17 +18,19 @@ import com.example.demo.service.UserService;
 
 @Api(description = "用户接口")
 @RestController
+@RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
     private UserService userService;
     
 	@ApiOperation(value = "获取所有用户信息" ,  notes = "返回所有用户信息")
-	@RequestMapping(value = "/getUsers/{pageNum}/{pageSize}", method=RequestMethod.GET)
-	public List<User> getUsers(@PathVariable("pageNum") Integer pageNum, @PathVariable("pageSize") Integer pageSize) {
-		List<User> users=userService.getAllUsers(pageNum,pageSize);
+	@RequestMapping(value = "/getUsers", method=RequestMethod.GET)
+    public List<User> getUsers(String userName,Boolean deleted,@RequestParam(defaultValue="1") Integer pageNum, 
+    @RequestParam(defaultValue = "10") Integer pageSize) {
+		List<User> users=userService.getAllUsers(userName.trim(),deleted,pageNum,pageSize);
 		return users;
-	} 
+	}
     
     @ApiOperation(value = "根据ID获取用户信息" ,  notes = "返回单个用户信息")
     @RequestMapping(value = "/getUser", method=RequestMethod.GET)
