@@ -6,38 +6,44 @@ import java.time.*;
 
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.*;
+import com.github.pagehelper.*;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserService{
     @Resource
     private UserMapper userMapper;
 
-    public List<User> selectByExample(int pageNum,int pageSize){
+    public List<User> getAllUsers(Integer pageNum,Integer pageSize){
+        PageHelper.startPage(pageNum, pageSize);
         UserExample example = new UserExample();
         example.setOrderByClause("id asc");
         List<User> list = userMapper.selectByExample(example);
+        long sum = userMapper.countByExample(example);//计算总数
+        //PageInfo<User> pageInfo = new PageInfo<User>(list);
+        //return pageInfo;
         return list;
     }
 
-    public User selectByPrimaryKey(int id){
+    public User getUserById(Integer id){
         return userMapper.selectByPrimaryKey(id);
     }
 
-    public int insert(User user){
-        if(user.getCreateTime()==null)
+    public int addUser(User user){
+        if(!StringUtils.isEmpty(user.getCreateTime()))
         user.setCreateTime(LocalDateTime.now(Clock.system(ZoneId.of("Asia/Shanghai"))));
-        if(user.getUpdateTime() == null)
+        if(!StringUtils.isEmpty(user.getUpdateTime()))
         user.setUpdateTime(LocalDateTime.now(Clock.system(ZoneId.of("Asia/Shanghai"))));
         return userMapper.insert(user);
     }
 
-    public int updateByPrimaryKey(User user){
+    public int updateUser(User user){
         return userMapper.updateByPrimaryKey(user);
     }
 
-    public int deleteByPrimaryKey(int id){
+    public int deleteUserById(Integer id){
         return userMapper.deleteByPrimaryKey(id);
     }
 }
