@@ -7,6 +7,7 @@ import java.time.*;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.*;
 import com.github.pagehelper.*;
+import com.example.demo.dto.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,7 +17,7 @@ public class UserService{
     @Resource
     private UserMapper userMapper;
 
-    public List<User> getAllUsers(String userName,Boolean deleted, Integer pageNum,Integer pageSize){
+    public MyPageInfo<User> getAllUsers(String userName,Boolean deleted, Integer pageNum,Integer pageSize){
         PageHelper.startPage(pageNum, pageSize);
         UserExample example = new UserExample();
         UserExample.Criteria criteria = example.createCriteria();
@@ -26,10 +27,8 @@ public class UserService{
         criteria.andDeletedEqualTo(deleted);
         example.setOrderByClause("id asc");
         List<User> list = userMapper.selectByExample(example);
-        //long sum = userMapper.countByExample(example);//计算总数
-        //PageInfo<User> pageInfo = new PageInfo<User>(list);
-        //return pageInfo;
-        return list;
+        MyPageInfo<User> pageInfo = new MyPageInfo<User>(list);
+        return pageInfo;
     }
 
     public User getUserById(Integer id){

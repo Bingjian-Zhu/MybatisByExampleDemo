@@ -1,7 +1,5 @@
 package com.example.demo.web;
 
-import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 
 import com.example.demo.model.*;
 import com.example.demo.service.UserService;
+import com.example.demo.dto.*;
 //import com.github.pagehelper.*;
 
 @Api(description = "用户接口")
@@ -22,9 +21,9 @@ public class UserController {
     
 	@ApiOperation(value = "获取所有用户信息" ,  notes = "返回所有用户信息")
 	@RequestMapping(value = "/getUsers", method=RequestMethod.GET)
-    public List<User> getUsers(String userName,Boolean deleted,@RequestParam(defaultValue="1") Integer pageNum, 
+    public MyPageInfo<User> getUsers(String userName,Boolean deleted,@RequestParam(defaultValue="1") Integer pageNum, 
     @RequestParam(defaultValue = "10") Integer pageSize) {
-		List<User> users=userService.getAllUsers(userName,deleted,pageNum,pageSize);
+		MyPageInfo<User> users=userService.getAllUsers(userName,deleted,pageNum,pageSize);
 		return users;
 	}
     
